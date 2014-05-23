@@ -1,0 +1,50 @@
+# depslib dependency file v1.0
+1400785053 source:d:\stm32\projects\lcd\src\i2c.c
+	"stm32f10x.h"
+	"stm32f10x_gpio.h"
+	"stm32f10x_rcc.h"
+	"delay.h"
+	"stm32f10x_i2c.h"
+	"I2C.h"
+
+1400567812 d:\stm32\projects\lcd\cmsis_boot\stm32f10x.h
+	"core_cm3.h"
+	"system_stm32f10x.h"
+	<stdint.h>
+	"stm32f10x_conf.h"
+
+1400567812 d:\stm32\projects\lcd\cmsis\core_cm3.h
+	<stdint.h>
+	<core_cmInstr.h>
+	<core_cmFunc.h>
+
+1400567812 d:\stm32\projects\lcd\cmsis\core_cminstr.h
+	<cmsis_iar.h>
+	<cmsis_ccs.h>
+
+1400567812 d:\stm32\projects\lcd\cmsis\core_cmfunc.h
+	<cmsis_iar.h>
+	<cmsis_ccs.h>
+
+1400567812 d:\stm32\projects\lcd\cmsis_boot\system_stm32f10x.h
+
+1400567812 d:\stm32\projects\lcd\cmsis_boot\stm32f10x_conf.h
+
+1400567812 d:\stm32\projects\lcd\stm_lib\inc\stm32f10x_gpio.h
+	"stm32f10x.h"
+
+1400567812 d:\stm32\projects\lcd\stm_lib\inc\stm32f10x_rcc.h
+	"stm32f10x.h"
+
+1400784682 d:\stm32\projects\lcd\src\delay.h
+
+1299739636 d:\stm32\projects\lcd\stm_lib\inc\stm32f10x_i2c.h
+	"stm32f10x.h"
+
+1400784992 d:\stm32\projects\lcd\src\i2c.h
+	"stm32f10x.h"
+	"stm32f10x_gpio.h"
+	"stm32f10x_rcc.h"
+	"delay.h"
+	"stm32f10x_i2c.h"
+
