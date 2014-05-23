@@ -4,7 +4,7 @@
 #include "stm32f10x_usart.h"
 #include "stm32f10x_i2c.h"
 #include "delay.h"
-//#include "USART.h"
+//#include "USART.h" 
 #include "I2C.h"
 #include "LiquidCrystal_I2C.h"
 
@@ -105,16 +105,16 @@ void displayKeyCodes(void) {
 
 int main()
 {
-//  USART1_Init(); //Вызов функции инициализации периферии
+//  USART1_Init(); //Р’С‹Р·РѕРІ С„СѓРЅРєС†РёРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РїРµСЂРёС„РµСЂРёРё
 
   uint8_t data;
-    //дождались команды и начали работу
+    //РґРѕР¶РґР°Р»РёСЃСЊ РєРѕРјР°РЅРґС‹ Рё РЅР°С‡Р°Р»Рё СЂР°Р±РѕС‚Сѓ
 /*  while(1)
   {
-    if((USART1->SR & USART_SR_RXNE)) //Проверяем поступление данных от компьютера
+    if((USART1->SR & USART_SR_RXNE)) //РџСЂРѕРІРµСЂСЏРµРј РїРѕСЃС‚СѓРїР»РµРЅРёРµ РґР°РЅРЅС‹С… РѕС‚ РєРѕРјРїСЊСЋС‚РµСЂР°
     {
-      data = USART1->DR; //Считываем принятые данные
-    //  Usart1_Send_symbol(data); //И тут же отсылаем их обратно
+      data = USART1->DR; //РЎС‡РёС‚С‹РІР°РµРј РїСЂРёРЅСЏС‚С‹Рµ РґР°РЅРЅС‹Рµ
+    //  Usart1_Send_symbol(data); //Р С‚СѓС‚ Р¶Рµ РѕС‚СЃС‹Р»Р°РµРј РёС… РѕР±СЂР°С‚РЅРѕ
       break;
     }
   }*/
@@ -161,7 +161,7 @@ int main()
   }
 
   Delay(3000);*/
-    //установим кляксу
+    //СѓСЃС‚Р°РЅРѕРІРёРј РєР»СЏРєСЃСѓ
   LCDI2C_createChar(0, habr1);
   LCDI2C_createChar(1, habr2);
   LCDI2C_createChar(2, habr3);

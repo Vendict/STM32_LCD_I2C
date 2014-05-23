@@ -6,50 +6,50 @@
 #include "I2C.h"
 
 
-//для I2C
+//РґР»СЏ I2C
 GPIO_InitTypeDef i2c_gpio;
 I2C_InitTypeDef i2c;
 
 void init_I2C1(void)
 {
-    // Включаем тактирование нужных модулей
+    // Р’РєР»СЋС‡Р°РµРј С‚Р°РєС‚РёСЂРѕРІР°РЅРёРµ РЅСѓР¶РЅС‹С… РјРѕРґСѓР»РµР№
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
 
-    // А вот и настройка I2C
+    // Рђ РІРѕС‚ Рё РЅР°СЃС‚СЂРѕР№РєР° I2C
     i2c.I2C_ClockSpeed = 100000;
     i2c.I2C_Mode = I2C_Mode_I2C;
     i2c.I2C_DutyCycle = I2C_DutyCycle_2;
-    // Адрес я тут взял первый пришедший в голову
+    // РђРґСЂРµСЃ СЏ С‚СѓС‚ РІР·СЏР» РїРµСЂРІС‹Р№ РїСЂРёС€РµРґС€РёР№ РІ РіРѕР»РѕРІСѓ
     i2c.I2C_OwnAddress1 = 0x15;
     i2c.I2C_Ack = I2C_Ack_Enable;
     i2c.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
     I2C_Init(I2C1, &i2c);
 
-    // I2C использует две ноги микроконтроллера, их тоже нужно настроить
+    // I2C РёСЃРїРѕР»СЊР·СѓРµС‚ РґРІРµ РЅРѕРіРё РјРёРєСЂРѕРєРѕРЅС‚СЂРѕР»Р»РµСЂР°, РёС… С‚РѕР¶Рµ РЅСѓР¶РЅРѕ РЅР°СЃС‚СЂРѕРёС‚СЊ
     i2c_gpio.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
     i2c_gpio.GPIO_Mode = GPIO_Mode_AF_OD;
     i2c_gpio.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOB, &i2c_gpio);
 
-    // Ну и включаем, собственно, модуль I2C1
+    // РќСѓ Рё РІРєР»СЋС‡Р°РµРј, СЃРѕР±СЃС‚РІРµРЅРЅРѕ, РјРѕРґСѓР»СЊ I2C1
     I2C_Cmd(I2C1, ENABLE);
 }
 
 /*******************************************************************/
 void I2C_StartTransmission(I2C_TypeDef* I2Cx, uint8_t transmissionDirection,  uint8_t slaveAddress)
 {
-    // На всякий слуыай ждем, пока шина осовободится
+    // РќР° РІСЃСЏРєРёР№ СЃР»СѓС‹Р°Р№ Р¶РґРµРј, РїРѕРєР° С€РёРЅР° РѕСЃРѕРІРѕР±РѕРґРёС‚СЃСЏ
     while(I2C_GetFlagStatus(I2Cx, I2C_FLAG_BUSY));
-    // Генерируем старт - тут все понятно )
+    // Р“РµРЅРµСЂРёСЂСѓРµРј СЃС‚Р°СЂС‚ - С‚СѓС‚ РІСЃРµ РїРѕРЅСЏС‚РЅРѕ )
     I2C_GenerateSTART(I2Cx, ENABLE);
-    // Ждем пока взлетит нужный флаг
+    // Р–РґРµРј РїРѕРєР° РІР·Р»РµС‚РёС‚ РЅСѓР¶РЅС‹Р№ С„Р»Р°Рі
     while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_MODE_SELECT));
-    // Посылаем адрес подчиненному  //возможно тут нужен сдвиг влево  //судя по исходникам - да, нужен сдвиг влево
+    // РџРѕСЃС‹Р»Р°РµРј Р°РґСЂРµСЃ РїРѕРґС‡РёРЅРµРЅРЅРѕРјСѓ  //РІРѕР·РјРѕР¶РЅРѕ С‚СѓС‚ РЅСѓР¶РµРЅ СЃРґРІРёРі РІР»РµРІРѕ  //СЃСѓРґСЏ РїРѕ РёСЃС…РѕРґРЅРёРєР°Рј - РґР°, РЅСѓР¶РµРЅ СЃРґРІРёРі РІР»РµРІРѕ
     //http://microtechnics.ru/stm32-ispolzovanie-i2c/#comment-8109
     I2C_Send7bitAddress(I2Cx, slaveAddress<<1, transmissionDirection);
-    // А теперь у нас два варианта развития событий - в зависимости от выбранного направления обмена данными
+    // Рђ С‚РµРїРµСЂСЊ Сѓ РЅР°СЃ РґРІР° РІР°СЂРёР°РЅС‚Р° СЂР°Р·РІРёС‚РёСЏ СЃРѕР±С‹С‚РёР№ - РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РЅР°РїСЂР°РІР»РµРЅРёСЏ РѕР±РјРµРЅР° РґР°РЅРЅС‹РјРё
     if(transmissionDirection== I2C_Direction_Transmitter)
     {
     	while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
@@ -63,7 +63,7 @@ void I2C_StartTransmission(I2C_TypeDef* I2Cx, uint8_t transmissionDirection,  ui
 /*******************************************************************/
 void I2C_WriteData(I2C_TypeDef* I2Cx, uint8_t data)
 {
-    // Просто вызываем готоваую функцию из SPL и ждем, пока данные улетят
+    // РџСЂРѕСЃС‚Рѕ РІС‹Р·С‹РІР°РµРј РіРѕС‚РѕРІР°СѓСЋ С„СѓРЅРєС†РёСЋ РёР· SPL Рё Р¶РґРµРј, РїРѕРєР° РґР°РЅРЅС‹Рµ СѓР»РµС‚СЏС‚
     I2C_SendData(I2Cx, data);
     while(!I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
 }
@@ -73,7 +73,7 @@ void I2C_WriteData(I2C_TypeDef* I2Cx, uint8_t data)
 /*******************************************************************/
 uint8_t I2C_ReadData(I2C_TypeDef* I2Cx)
 {
-    // Тут картина похожа, как только данные пришли быстренько считываем их и возвращаем
+    // РўСѓС‚ РєР°СЂС‚РёРЅР° РїРѕС…РѕР¶Р°, РєР°Рє С‚РѕР»СЊРєРѕ РґР°РЅРЅС‹Рµ РїСЂРёС€Р»Рё Р±С‹СЃС‚СЂРµРЅСЊРєРѕ СЃС‡РёС‚С‹РІР°РµРј РёС… Рё РІРѕР·РІСЂР°С‰Р°РµРј
     while( !I2C_CheckEvent(I2Cx, I2C_EVENT_MASTER_BYTE_RECEIVED) );
     uint8_t data;
     data = I2C_ReceiveData(I2Cx);

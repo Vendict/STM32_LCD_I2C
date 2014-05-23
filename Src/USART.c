@@ -5,51 +5,51 @@
 #include "delay.h"
 #include "USART.h"
 
-//Структуры для инициализации GPIOA и USART1
+//РЎС‚СЂСѓРєС‚СѓСЂС‹ РґР»СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё GPIOA Рё USART1
 GPIO_InitTypeDef    USART_GPIO_InitStruct;
 USART_InitTypeDef    USART_InitStruct;
 
-void USART1_Init(void); //Объявление функции инициализации периферии
-void Usart1_Send_symbol(uint8_t); //Объявление функции передачи символа
-void Usart1_Send_String(char* str); //Объявление функции передачи строки
+void USART1_Init(void); //РћР±СЉСЏРІР»РµРЅРёРµ С„СѓРЅРєС†РёРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РїРµСЂРёС„РµСЂРёРё
+void Usart1_Send_symbol(uint8_t); //РћР±СЉСЏРІР»РµРЅРёРµ С„СѓРЅРєС†РёРё РїРµСЂРµРґР°С‡Рё СЃРёРјРІРѕР»Р°
+void Usart1_Send_String(char* str); //РћР±СЉСЏРІР»РµРЅРёРµ С„СѓРЅРєС†РёРё РїРµСЂРµРґР°С‡Рё СЃС‚СЂРѕРєРё
 
-//Функция инициализации периферии
+//Р¤СѓРЅРєС†РёСЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РїРµСЂРёС„РµСЂРёРё
 void USART1_Init(void)
 {
-  //Включаем тактирование GPIOA, USART1 и альтернативных функций AFIO
+  //Р’РєР»СЋС‡Р°РµРј С‚Р°РєС‚РёСЂРѕРІР°РЅРёРµ GPIOA, USART1 Рё Р°Р»СЊС‚РµСЂРЅР°С‚РёРІРЅС‹С… С„СѓРЅРєС†РёР№ AFIO
   RCC_APB2PeriphClockCmd((RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO), ENABLE);
 
-  //Инициализации вывода PA9 - USART1_Tx
-  USART_GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9; //Настройки вывода PA9
-  USART_GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; //Скорость порта
-  USART_GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP; //Режим альтернативной функции, выход Push-Pull
-  GPIO_Init(GPIOA, &USART_GPIO_InitStruct); //Заданные настройки сохраняем в регистрах GPIOА
+  //РРЅРёС†РёР°Р»РёР·Р°С†РёРё РІС‹РІРѕРґР° PA9 - USART1_Tx
+  USART_GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9; //РќР°СЃС‚СЂРѕР№РєРё РІС‹РІРѕРґР° PA9
+  USART_GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; //РЎРєРѕСЂРѕСЃС‚СЊ РїРѕСЂС‚Р°
+  USART_GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP; //Р РµР¶РёРј Р°Р»СЊС‚РµСЂРЅР°С‚РёРІРЅРѕР№ С„СѓРЅРєС†РёРё, РІС‹С…РѕРґ Push-Pull
+  GPIO_Init(GPIOA, &USART_GPIO_InitStruct); //Р—Р°РґР°РЅРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅСЏРµРј РІ СЂРµРіРёСЃС‚СЂР°С… GPIOРђ
 
-  //Инициализации вывода PA10 - USART1_Rx
-  USART_GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10; //Настройки вывода PA10
+  //РРЅРёС†РёР°Р»РёР·Р°С†РёРё РІС‹РІРѕРґР° PA10 - USART1_Rx
+  USART_GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10; //РќР°СЃС‚СЂРѕР№РєРё РІС‹РІРѕРґР° PA10
   USART_GPIO_InitStruct.GPIO_Mode  = GPIO_Mode_IN_FLOATING; //Input floating
-  GPIO_Init(GPIOA, &USART_GPIO_InitStruct); //Заданные настройки сохраняем в регистрах GPIOА
+  GPIO_Init(GPIOA, &USART_GPIO_InitStruct); //Р—Р°РґР°РЅРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅСЏРµРј РІ СЂРµРіРёСЃС‚СЂР°С… GPIOРђ
 
-  //Инициализация USART1
-  USART_InitStruct.USART_BaudRate = 9600; //Скорость обмена 9600 бод
-  USART_InitStruct.USART_WordLength = USART_WordLength_8b; //Длина слова 8 бит
-  USART_InitStruct.USART_StopBits = USART_StopBits_1; //1 стоп-бит
-  USART_InitStruct.USART_Parity = USART_Parity_No ; //Без проверки четности
-  USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None; //Без аппаратного контроля
-  USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx; //Включен передатчик и приемник USART1
-  USART_Init(USART1, &USART_InitStruct); //Заданные настройки сохраняем в регистрах USART1
+  //РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ USART1
+  USART_InitStruct.USART_BaudRate = 9600; //РЎРєРѕСЂРѕСЃС‚СЊ РѕР±РјРµРЅР° 9600 Р±РѕРґ
+  USART_InitStruct.USART_WordLength = USART_WordLength_8b; //Р”Р»РёРЅР° СЃР»РѕРІР° 8 Р±РёС‚
+  USART_InitStruct.USART_StopBits = USART_StopBits_1; //1 СЃС‚РѕРї-Р±РёС‚
+  USART_InitStruct.USART_Parity = USART_Parity_No ; //Р‘РµР· РїСЂРѕРІРµСЂРєРё С‡РµС‚РЅРѕСЃС‚Рё
+  USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None; //Р‘РµР· Р°РїРїР°СЂР°С‚РЅРѕРіРѕ РєРѕРЅС‚СЂРѕР»СЏ
+  USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx; //Р’РєР»СЋС‡РµРЅ РїРµСЂРµРґР°С‚С‡РёРє Рё РїСЂРёРµРјРЅРёРє USART1
+  USART_Init(USART1, &USART_InitStruct); //Р—Р°РґР°РЅРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅСЏРµРј РІ СЂРµРіРёСЃС‚СЂР°С… USART1
 
-  USART_Cmd(USART1, ENABLE); //Включаем USART1
+  USART_Cmd(USART1, ENABLE); //Р’РєР»СЋС‡Р°РµРј USART1
 }
 
-//Функция передачи символа
+//Р¤СѓРЅРєС†РёСЏ РїРµСЂРµРґР°С‡Рё СЃРёРјРІРѕР»Р°
 void Usart1_Send_symbol(uint8_t data)
 {
-  while(!(USART1->SR & USART_SR_TC)); //Проверяем установку флага TC - завершения предыдущей передачи
-  USART1->DR = data; //Записываем значение в регистр данных - передаем символ
+  while(!(USART1->SR & USART_SR_TC)); //РџСЂРѕРІРµСЂСЏРµРј СѓСЃС‚Р°РЅРѕРІРєСѓ С„Р»Р°РіР° TC - Р·Р°РІРµСЂС€РµРЅРёСЏ РїСЂРµРґС‹РґСѓС‰РµР№ РїРµСЂРµРґР°С‡Рё
+  USART1->DR = data; //Р—Р°РїРёСЃС‹РІР°РµРј Р·РЅР°С‡РµРЅРёРµ РІ СЂРµРіРёСЃС‚СЂ РґР°РЅРЅС‹С… - РїРµСЂРµРґР°РµРј СЃРёРјРІРѕР»
 }
 
-//Функция передачи строки через USART
+//Р¤СѓРЅРєС†РёСЏ РїРµСЂРµРґР°С‡Рё СЃС‚СЂРѕРєРё С‡РµСЂРµР· USART
 void Usart1_Send_String(char* str)
 {
   uint8_t i=0;

@@ -288,7 +288,7 @@ void LCDI2C_setBacklight(uint8_t new_val){
 	}
 }
 
-//Функция передачи строки через USART
+//Р¤СѓРЅРєС†РёСЏ РїРµСЂРµРґР°С‡Рё СЃС‚СЂРѕРєРё С‡РµСЂРµР· USART
 void LCDI2C_write_String(char* str) {
   uint8_t i=0;
   while(str[i])
